@@ -71,33 +71,4 @@
         //Возвращаем самую длинную подстройку
         return longest;
     }
-
-    //Метод для получения случайного числа
-    public static async Task<int> getRandomIndex(int max)
-    {
-        using HttpClient client = new();
-        string url = $"http://www.randomnumberapi.com/api/v1.0/random?min=0&max={max - 1}&count=1";
-        try
-        {
-            //Асинхронный запрос к API 
-            var response = await client.GetStringAsync(url);
-            //Убираем из ответа скобки и разбиваем в массив чисел
-            var numbers = response.Trim('[', ']').Split(',');
-            //Парсим первое число из массива и возращаем его как целое
-            return int.Parse(numbers[0]);
-        }
-        catch (Exception)
-        {
-            //Если API недоступен, то генерируем случайное число
-            Random random = new Random();
-            //Возвращаем случайное число от 0 до конца строки
-            return random.Next(0, max);
-        }
-    }
-    //Метод для удаления символа по индексу
-    public static string removeCharacterAtIndex(string str, int index)
-    {
-        //Удаляет часть строки начиная с заданного индекса длинной в 1 символ
-        return str.Remove(index, 1);
-    }
 }

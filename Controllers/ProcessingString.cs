@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBlackList.Controllers;
+using static MyRamdomAPI.Controllers.RandomApi;
 
 namespace MaximNET.Controllers
 {
@@ -7,6 +9,18 @@ namespace MaximNET.Controllers
     [Route("api/[controller]")]
     public class StringProcessingController : ControllerBase
     {
+        // Конфигурация приложения для доступа к настройкам
+        private readonly IConfiguration _configuration;
+        // HTTP клиент для выполнения запросов
+        private readonly HttpClient _httpClient;
+
+        // Конструктор контроллера, принимает конфигурацию и фабрику HTTP клиентов
+        public StringProcessingController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        {
+            _configuration = configuration; // Инициализация конфигурации
+            _httpClient = httpClientFactory.CreateClient(); // Создание HTTP клиента
+        }
+
         //Обрабатывает GET запросы
         [HttpGet]
         public async Task<ActionResult<Response>> processString([FromQuery] string input, [FromQuery] string sortMethod = "quick")
@@ -17,6 +31,19 @@ namespace MaximNET.Controllers
                 return BadRequest(new { error = "Пустая строка" });
             }
 
+            //Проверка на черный список 
+            var blackListController = new BlackList(_configuration);
+            // Поиск слов из черного списка в входной строке
+            var BlackWords = blackListController.checkBlackListWords(input);
+            if (BlackWords.Any())
+            {
+                // Возврат ошибки с найденными словами
+                return BadRequest($"Слова из черного списка: {string.Join(", ", BlackWords)}");
+            }
+
+            var randomController = new RandomAPI(_configuration);
+            var randomIndexApi = randomController.getRandomIndex;
+
             //Если найдены недопустимые символы, возвращаем ошибку
             var invalidChars = ProcessingService.getInvalidCharList(input);
             if (invalidChars.Count > 0)
@@ -24,17 +51,17 @@ namespace MaximNET.Controllers
                 return BadRequest(new { error = "Неподходящие символы: " + string.Join(", ", invalidChars) });
             }
 
+            // Получение URL удаленного API из конфигурации
+            var apiUrl = _configuration.GetSection("RemoteApi").GetValue<string>("Url");
+
             //Обработка входной строки
             string processedString = ProcessingService.processInput(input);
             var charCount = ProcessingService.countCharacters(processedString); //Подсчет символов в обработанной строке
-            string longestVowelSubstring = ProcessingService.findLongestVowelSubstring(processedString); //Поиск самой длинной подстроки, состоящей из гласных
-
-            //Получение случайного числа API
-            int randomIndex = await ProcessingService.getRandomIndex(processedString.Length);
-
+            string longestVowelSubstring = ProcessingService.findLongestVowelSubstring(processedString); //Поиск самой длинной подстроки, состоящей из 
+            //Получение случайного индекса входной строки
+            int randomIndex = await randomIndexApi(input.Length);
             //Удаление символа по случайному индексу
-            string modifiedString = ProcessingService.removeCharacterAtIndex(processedString, randomIndex);
-
+            string modifiedString = RandomAPI.removeCharacterAtIndex(processedString, randomIndex);
             //Выбор сортировки
             string sortedString = sortMethod.ToLower() == "tree" ? TreeSort.treeSort(processedString.ToCharArray()) : QuickSort.quickSort(processedString);
 
@@ -45,6 +72,7 @@ namespace MaximNET.Controllers
                 charCount,
                 longestVowelSubstring,
                 sortedString,
+                BlackWords,
                 modifiedString,
                 randomIndex
             });

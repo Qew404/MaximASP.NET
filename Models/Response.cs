@@ -6,4 +6,5 @@
     public string longestVowelSubstring;
     public string sortedString;
     public string modifiedString;
+    public string BlackWords;
 }

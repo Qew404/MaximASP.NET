@@ -1,4 +1,6 @@
 using Microsoft.OpenApi.Models;
+using AppsettingsValue;
+using ParallelLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<Limit>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -33,5 +37,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-builder.Services.AddHttpClient();

@@ -25,7 +25,7 @@ namespace MaximNET.Controllers
         [HttpGet]
         public async Task<ActionResult<Response>> processString([FromQuery] string input, [FromQuery] string sortMethod = "quick")
         {
-            //// Проверка на пустую строку
+            // Проверка на пустую строку
             if (string.IsNullOrWhiteSpace(input))
             {
                 return BadRequest(new { error = "Пустая строка" });

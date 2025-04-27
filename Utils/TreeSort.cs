@@ -1,9 +1,9 @@
 ﻿public class TreeSort
 {
     //Метод сортировки деревом
-    public static string treeSort(char[] array)
+    public static string _TreeSort(char[] array)
     {
-        TreeNode root = null;
+        TreeNode? root = null;
         // Вставка в дерево элимента
         foreach (char value in array)
         {

@@ -4,9 +4,6 @@ using Microsoft.Extensions.Options;
 
 namespace MyBlackList.Controllers
 {
-    //Маршрут для контроллера
-    [Route("api/Configuration")]
-    [ApiController]
     public class BlackList : ControllerBase
     {
         // Поле для хранения конфигурации приложения
@@ -22,7 +19,7 @@ namespace MyBlackList.Controllers
         
         // Метод для обработки GET-запросов
         [HttpGet]
-        public List<string> checkBlackListWords(string input)
+        public List<string> CheckBlackListWords(string input)
         {
             var blackListFromConfig = _configuration.GetSection("Log:Settings").GetValue<string>("BlackList");
             // Проверка на наличие черного списка в конфигурации

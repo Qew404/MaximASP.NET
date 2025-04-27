@@ -1,7 +1,7 @@
 ﻿public class QuickSort
 {
     //Метод для быстрой сортировки
-    public static string quickSort(string str)
+    public static string _QuickSort(string str)
     {
         if (str.Length <= 1)
             return str;
@@ -15,6 +15,6 @@
         //Элементы больше опорного
         string greater = new string(str.Where(c => c > pivot).ToArray());
         //Рекурсивная сортировка и объединение результата
-        return quickSort(less) + equal + quickSort(greater);
+        return _QuickSort(less) + equal + _QuickSort(greater);
     }
 }

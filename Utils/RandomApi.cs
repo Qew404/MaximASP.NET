@@ -4,9 +4,6 @@ using Microsoft.Extensions.Options;
 
 namespace MyRamdomAPI.Controllers
 {
-    //Маршрут для контроллера
-    [Route("api/Configuration")]
-    [ApiController]
     public class RandomApi
 
     {
@@ -29,7 +26,7 @@ namespace MyRamdomAPI.Controllers
                 this.appSettings = appSettings;
             }
 
-            public async Task<int> getRandomIndex(int max)
+            public async Task<int> GetRandomIndex(int max)
             {
                 // Получение URL удаленного API из конфигурации
                 var Url = _configuration.GetSection("RemoteApi").GetValue<string>("Url");
@@ -54,7 +51,7 @@ namespace MyRamdomAPI.Controllers
             }
 
             //Метод для удаления символа по индексу
-            public static string removeCharacterAtIndex(string str, int index)
+            public static string RemoveCharacterAtIndex(string str, int index)
             {
                 //Удаляет часть строки начиная с заданного индекса длинной в 1 символ
                 return str.Remove(index, 1);

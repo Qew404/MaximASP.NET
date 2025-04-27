@@ -34,7 +34,7 @@ namespace MaximNET.Controllers
             //Проверка на черный список 
             var blackListController = new BlackList(_configuration);
             // Поиск слов из черного списка в входной строке
-            var BlackWords = blackListController.checkBlackListWords(input);
+            var BlackWords = blackListController.CheckBlackListWords(input);
             if (BlackWords.Any())
             {
                 // Возврат ошибки с найденными словами
@@ -42,10 +42,10 @@ namespace MaximNET.Controllers
             }
 
             var randomController = new RandomAPI(_configuration);
-            var randomIndexApi = randomController.getRandomIndex;
+            var randomIndexApi = randomController.GetRandomIndex;
 
             //Если найдены недопустимые символы, возвращаем ошибку
-            var invalidChars = ProcessingService.getInvalidCharList(input);
+            var invalidChars = ProcessingService.GetInvalidCharList(input);
             if (invalidChars.Count > 0)
             {
                 return BadRequest(new { error = "Неподходящие символы: " + string.Join(", ", invalidChars) });
@@ -55,15 +55,15 @@ namespace MaximNET.Controllers
             var apiUrl = _configuration.GetSection("RemoteApi").GetValue<string>("Url");
 
             //Обработка входной строки
-            string processedString = ProcessingService.processInput(input);
+            string processedString = ProcessingService.ProcessInput(input);
             var charCount = ProcessingService.countCharacters(processedString); //Подсчет символов в обработанной строке
             string longestVowelSubstring = ProcessingService.findLongestVowelSubstring(processedString); //Поиск самой длинной подстроки, состоящей из 
             //Получение случайного индекса входной строки
             int randomIndex = await randomIndexApi(input.Length);
             //Удаление символа по случайному индексу
-            string modifiedString = RandomAPI.removeCharacterAtIndex(processedString, randomIndex);
+            string modifiedString = RandomAPI.RemoveCharacterAtIndex(processedString, randomIndex);
             //Выбор сортировки
-            string sortedString = sortMethod.ToLower() == "tree" ? TreeSort.treeSort(processedString.ToCharArray()) : QuickSort.quickSort(processedString);
+            string sortedString = sortMethod.ToLower() == "tree" ? TreeSort._TreeSort(processedString.ToCharArray()) : QuickSort._QuickSort(processedString);
 
             //Возвращаем результаты в формате JSON
             return Ok(new

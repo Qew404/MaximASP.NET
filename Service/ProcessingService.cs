@@ -1,7 +1,7 @@
 ﻿public class ProcessingService
 {
 
-    public static List<char> getInvalidCharList(string input)
+    public static List<char> GetInvalidCharList(string input)
     {
         //Список для хранения недопустимых символов
         List<char> invalidChars = new List<char>();
@@ -19,24 +19,24 @@
     }
 
     //Метод для обработки входной строки
-    public static string processInput(string input)
+    public static string ProcessInput(string input)
     {
         //Если четная
         if (input.Length % 2 == 0)
         {
             int mid = input.Length / 2; // Середина строки  
                                         //Разворачиваем половины и объединяем
-            return reverseString(input.Substring(0, mid)) + reverseString(input.Substring(mid));
+            return ReverseString(input.Substring(0, mid)) + ReverseString(input.Substring(mid));
         }
         else
         {
             //Не четная. Разворачиваем и добавляем в конец
-            return reverseString(input) + input;
+            return ReverseString(input) + input;
         }
     }
 
     //Метод для переворота строки
-    public static string reverseString(string str) => new string(str.Reverse().ToArray());
+    public static string ReverseString(string str) => new string(str.Reverse().ToArray());
 
     //Метод для подсчета символов
     public static Dictionary<char, int> countCharacters(string processedString)
